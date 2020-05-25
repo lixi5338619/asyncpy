@@ -8,6 +8,8 @@ Asyncpy是我基于asyncio和aiohttp开发的一个轻便高效的爬虫框架�
 
 
 - - -
+使用文档 : [https://blog.csdn.net/weixin_43582101/article/details/106320674](https://blog.csdn.net/weixin_43582101/article/details/106320674)
+
 应用案例 : [https://blog.csdn.net/weixin_43582101/category_10035187.html](https://blog.csdn.net/weixin_43582101/category_10035187.html)
 
 github: [https://github.com/lixi5338619/asyncpy](https://github.com/lixi5338619/asyncpy)
