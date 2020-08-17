@@ -1,7 +1,7 @@
 # asyncpy
 Use asyncio and aiohttp's concatenated web crawler framework 
 
-<img src="https://img-blog.csdnimg.cn/20200523121741871.png?x-oss-process=image/resize,m_fixed,h_224,w_224" alt="drawing" style="width:50px;"/>
+<img src="https://img-blog.csdnimg.cn/20200523121741871.png?x-oss-process=image/resize,m_fixed,h_224,w_224"/>
 
 
 Asyncpy是我基于asyncio和aiohttp开发的一个轻便高效的爬虫框架，采用了scrapy的设计模式，参考了github上一些开源框架的处理逻辑。
