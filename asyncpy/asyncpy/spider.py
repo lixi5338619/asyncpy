@@ -586,4 +586,5 @@ class Spider(SpiderHook):
         """
         self.logger.info(f"Asyncpy finished spider: {self.name}")
         await self._cancel_tasks()
-        self.loop.stop()
+        #self.loop.stop()
+       
