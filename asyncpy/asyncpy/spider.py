@@ -203,8 +203,8 @@ class Spider(SpiderHook):
 
     async def _cancel_tasks(self):
         tasks = []
-        for task in asyncio.Task.all_tasks():
-            if task is not asyncio.tasks.Task.current_task():
+        for task in asyncio.all_tasks():
+            if task is not asyncio.current_task():
                 tasks.append(task)
                 task.cancel()
         await asyncio.gather(*tasks, return_exceptions=True)
