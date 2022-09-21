@@ -6,6 +6,13 @@ Use asyncio and aiohttp's concatenated web crawler framework
 
 Asyncpy是我基于asyncio和aiohttp开发的一个轻便高效的爬虫框架，采用了scrapy的设计模式，参考了github上一些开源框架的处理逻辑。
 
+---
+
+## 更新事项
+
+- 1.1.7： 修复事件循环结束时的报错问题
+- 1.1.8： 在spider文件中不再需要手动导入settings_attr
+
 
 - - -
 使用文档 : [https://blog.csdn.net/weixin_43582101/article/details/106320674](https://blog.csdn.net/weixin_43582101/article/details/106320674)
