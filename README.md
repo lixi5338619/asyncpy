@@ -76,7 +76,8 @@ asyncpy genspider demo
 |PIPELINES|管道|
 |MIDDLEWARE|中间件|
 
-如果要启动全局settings的话，需要在spider文件中通过settings_attr 传入settings：
+
+1.1.8版本之前，如果要启动全局settings的话，需要在 spider文件中通过settings_attr 传入settings：
 ```python
 import settings
 class DemoSpider(Spider):
@@ -84,6 +85,9 @@ class DemoSpider(Spider):
     start_urls = []
     settings_attr = settings
 ```
+
+**新版本中无需手动传入settings。**
+
 - - -
 ### 自定义settings
 如果需要对单个爬虫文件进行settings配置，可以像scrapy一样在爬虫文件中引入 **custom_settings**。
