@@ -6,7 +6,7 @@
 CREATE YOUR DEFAULT_CONFIG !
 
 Some configuration:
-        CONCURRENT_REQUESTS     并发数量
+        CONCURRENT_REQUESTS     线程数量
         RETRIES                 重试次数
         DOWNLOAD_DELAY          下载延时
         RETRY_DELAY             重试延时

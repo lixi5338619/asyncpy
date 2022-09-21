@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
-
-
 import json
 from typing import Any, Callable, Optional
 from http.cookies import SimpleCookie

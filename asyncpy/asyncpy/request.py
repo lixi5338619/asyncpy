@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
- 
+
 import aiohttp
 import asyncio
 from asyncpy.exceptions import InvalidRequestMethod
@@ -19,7 +19,6 @@ class Request(object):
     name = "Request"
 
     REQUEST_CONFIG = settings.DEFAULT_REQUEST_CONFIG
-
     REQUEST_CONFIG["RETRY_FUNC"] = Coroutine
     REQUEST_CONFIG["VALID"] = Coroutine
 
@@ -31,6 +30,7 @@ class Request(object):
                  settings_attr=None,
                  callback=None, encoding: Optional[str] = None,
                  headers: dict = None,
+                 cookies: dict = None,
                  meta: dict = None, custom_settings: dict = None,
                  request_session=None, **aiohttp_kwargs):
         self.url = url
@@ -43,16 +43,18 @@ class Request(object):
         self.callback = callback
         self.encoding = encoding
         self.headers = headers or {}
-
+        self.cookies = cookies or {}
         self.meta = meta or {}
         self.request_session = request_session
 
         self.settings_attr = settings_attr or {}
         if self.settings_attr and settings_attr.get('USER_AGENT'):
             self.headers['User-Agent'] = settings_attr.get('USER_AGENT')
+
         self.request_settings = self.REQUEST_CONFIG
         if self.settings_attr and settings_attr.get('DEFAULT_REQUEST_CONFIG'):
             self.request_settings = settings_attr.get('DEFAULT_REQUEST_CONFIG')
+
         if custom_settings:
             self.request_settings = custom_settings
 
@@ -77,7 +79,6 @@ class Request(object):
         return self.request_session
 
     async def fetch(self, delay=True) -> Response:
-
         """Fetch all the information by using aiohttp"""
         if delay and self.request_settings.get("DOWNLOAD_DELAY", 0) > 0:
             await asyncio.sleep(self.request_settings["DOWNLOAD_DELAY"])
@@ -150,15 +151,15 @@ class Request(object):
             await self.request_session.close()
 
     async def _make_request(self):
-        """通过 aiohttp 发起请求"""
+        """Aiohttp send request"""
         self.logger.info(f"<{self.method}: {self.url}>")
         if self.method == "GET":
             request_func = self.current_request_session.get(
-                self.url, headers=self.headers, ssl=self.ssl, **self.aiohttp_kwargs
+                self.url, headers=self.headers, cookies=self.cookies, ssl=self.ssl, **self.aiohttp_kwargs
             )
         else:
             request_func = self.current_request_session.post(
-                self.url, headers=self.headers, ssl=self.ssl, **self.aiohttp_kwargs
+                self.url, headers=self.headers, cookies=self.cookies, ssl=self.ssl, **self.aiohttp_kwargs
             )
         resp = await request_func
         return resp

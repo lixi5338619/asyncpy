@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
+import os
 import asyncio
 import collections
 import typing
@@ -22,10 +22,6 @@ import importlib
 import sys
 
 
-
-
-
-
 try:
     import uvloop
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -37,7 +33,6 @@ class SpiderHook:
     """
     SpiderHook is used for extend spider
     """
-
     callback_result_map: dict = None
 
     async def _run_spider_hook(self, hook_func):
@@ -100,7 +95,7 @@ class Spider(SpiderHook):
     """
     Spider is used for control requests better
     """
-    name = None
+    name = ''
     custom_settings = None
     settings_attr = None
     # Default values passing to each request object. Not implemented yet.
@@ -171,19 +166,26 @@ class Spider(SpiderHook):
         else:
             self.middleware = middleware or Middleware()
 
+
         # async queue as a producer
         self.request_queue = asyncio.Queue()
         if not self.settings_attr:
-            from asyncpy import settings
+            try:
+                sys.path.append(os.path.dirname(os.getcwd()))
+                import settings
+                self.settings_attr = get_attrs(settings)
+            except:
+                from asyncpy import settings
+                self.settings_attr = get_attrs(settings)
+                raise Exception("import settings error,please check path or project")
         else:
             self.settings_attr = get_attrs(self.settings_attr)
             self.concurrency = self.settings_attr.get('CONCURRENT_REQUESTS')
-        if not self.concurrency:
-            self.concurrency = settings.CONCURRENT_REQUESTS
+
 
 
         # set logger
-        if  isinstance(self.settings_attr,dict) and self.settings_attr.get('LOG_FILE'):
+        if isinstance(self.settings_attr,dict) and self.settings_attr.get('LOG_FILE'):
             LOG_FILE, LOG_LEVEL = self.settings_attr.get('LOG_FILE'),self.settings_attr.get('LOG_LEVEL','INFO')
             self.logger = get_logger(name=self.name,filename=LOG_FILE,level=LOG_LEVEL)
 
@@ -194,6 +196,10 @@ class Spider(SpiderHook):
             self.logger = check_logger(name=self.name)
 
 
+
+        if not self.concurrency:
+            self.concurrency = settings.CONCURRENT_REQUESTS
+
         # semaphore, used for concurrency control
         self.sem = asyncio.Semaphore(self.concurrency)
 
@@ -203,6 +209,8 @@ class Spider(SpiderHook):
 
     async def _cancel_tasks(self):
         tasks = []
+        #for task in asyncio.Task.all_tasks():
+        #    if task is not asyncio.tasks.Task.current_task():
         for task in asyncio.all_tasks():
             if task is not asyncio.current_task():
                 tasks.append(task)
@@ -401,8 +409,6 @@ class Spider(SpiderHook):
         #             pipelines_list.append(pipelines)
 
 
-
-
         loop = loop or asyncio.new_event_loop()
         spider_ins = cls(middleware=middleware, loop=loop, **spider_kwargs,pipelines=pipelines)
 
@@ -544,8 +550,8 @@ class Spider(SpiderHook):
             for i in range(self.worker_numbers)
         ]
         self.logger.info(f"Worker started")
-        for worker in workers:
-            self.logger.info(f"ensure_future started_worker: {id(worker)}")
+        #for worker in workers:
+        #    self.logger.info(f"ensure_future started_worker: {id(worker)}")
 
         await self.request_queue.join()
 
@@ -587,4 +593,3 @@ class Spider(SpiderHook):
         self.logger.info(f"Asyncpy finished spider: {self.name}")
         await self._cancel_tasks()
         #self.loop.stop()
-       

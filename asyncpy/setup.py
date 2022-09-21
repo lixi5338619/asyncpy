@@ -10,7 +10,7 @@ with open("README.md", "r",encoding='utf-8') as fh:
 setup(
     name="asyncpy",
     url="https://github.com/lixi5338619/asyncpy.git",
-    version= '1.1.7',
+    version= '1.1.9',
     description="Use asyncio and aiohttp's concatenated web crawler framework",
     long_description=long_description,
     author="lx",
