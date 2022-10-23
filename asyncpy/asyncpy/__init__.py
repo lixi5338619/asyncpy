@@ -20,7 +20,7 @@ from docopt import docopt
 __all__ = ["Middleware","Request","Response","Spider","IgnoreThisItem"]
 
 
-VERSION = '1.1.5'
+VERSION = '1.2.1'
 
 DEFAULT_ENCODING = 'utf-8'
 
