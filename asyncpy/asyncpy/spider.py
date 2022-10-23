@@ -2,7 +2,7 @@
 
 import os
 import asyncio
-import collections
+from collections.abc import Iterable
 import typing
 import weakref
 import traceback
@@ -137,7 +137,7 @@ class Spider(SpiderHook):
         """
 
 
-        if not isinstance(self.start_urls, collections.Iterable):
+        if not isinstance(self.start_urls, Iterable):
             raise ValueError(
                 "start_urls must be a Iterable object"
             )
@@ -177,11 +177,12 @@ class Spider(SpiderHook):
             except:
                 from asyncpy import settings
                 self.settings_attr = get_attrs(settings)
-                raise Exception("import settings error,please check path or project")
+                lg = get_logger()
+                lg.warning("【import settings Not Found,Please check path or project】")
+                lg.warning("【import settings Not Found,Please check path or project】")
         else:
             self.settings_attr = get_attrs(self.settings_attr)
             self.concurrency = self.settings_attr.get('CONCURRENT_REQUESTS')
-
 
 
         # set logger
@@ -194,7 +195,6 @@ class Spider(SpiderHook):
             self.logger = get_logger(name=self.name,filename=LOG_FILE,level=LOG_LEVEL)
         else:
             self.logger = check_logger(name=self.name)
-
 
 
         if not self.concurrency:
@@ -309,10 +309,11 @@ class Spider(SpiderHook):
                     signal, lambda: asyncio.ensure_future(self.stop(signal))
                 )
             except NotImplementedError:
-                self.logger.warning(
-                    f"{self.name} tried to use loop.add_signal_handler "
-                    "but it is not implemented on this platform."
-                )
+                # self.logger.warning(
+                #     f"{self.name} tried to use loop.add_signal_handler "
+                #     "but it is not implemented on this platform."
+                # )
+                ...
         # Run hook before spider start crawling
         await self._run_spider_hook(after_start)
 
